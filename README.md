@@ -80,5 +80,3 @@ El sistema fue diseñado bajo estrictos estándares de ciberseguridad y arquitec
 ¿Te interesa ver una **demo en vivo** del sistema o discutir oportunidades de desarrollo? ¡Hablemos!
 
 * 📧 **Correo Electrónico:** [jesu123456789pere@gmail.com](mailto:jesu123456789pere@gmail.com)
-* 💼 **LinkedIn:** [linkedin.com/in/jesusperez](#)
-* 🐙 **GitHub:** [github.com/jesusperez](#)
