@@ -1,0 +1,182 @@
+<!--
+============================================================
+     PROYECTO: Sistema POS BarCodeSys - Módulo de Ventas
+     DESCRIPCIÓN: Fragmento Thymeleaf reutilizable encargado de renderizar la sección de ventas
+                  modales en la interfaz.
+
+     @author Jesús Alexander Perez Huacaychuco
+     @version 1.0.0
+     @date 03/08/2026
+============================================================
+-->
+
+<!-- ============================================================
+     INICIO DE LA PLANTILLA
+     ============================================================
+     Inicio de la plantilla ventas-modales.html.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="modalesVenta">
+        
+        <!-- Modal Producto Rápido -->
+        <div class="modal fade" id="modalProductoRapido" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-green text-white">
+                        <h5 class="modal-title"><i class="bi bi-lightning-charge me-2"></i>Producto Rápido</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Código de Barras</label>
+                            <input type="text" id="codigoRapido" class="form-control" placeholder="Escanea el código aquí">
+                        </div>
+                        <div id="estadoBusquedaRapida" class="mb-2 text-center d-none">
+                            <span class="badge bg-success" id="badgeEncontradoRapido">Producto encontrado</span>
+                            <span class="badge bg-secondary" id="badgeNoEncontradoRapido">No encontrado en API</span>
+                        </div>
+                        <div id="imagenRapida" class="text-center mb-3 d-none">
+                            <img src="" alt="Producto" class="img-thumbnail" style="max-height: 100px;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre del Producto</label>
+                            <input type="text" id="nombreRapido" class="form-control" placeholder="Edita o escribe el nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Precio (S/.)</label>
+                            <input type="number" id="precioRapido" class="form-control" placeholder="0.00" step="0.01" min="0.01">
+                        </div>
+                        <button class="btn btn-green w-100" id="btnAgregarRapido"><i class="bi bi-plus-lg me-1"></i>Agregar a la Venta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Método Pago -->
+        <div class="modal fade" id="modalMetodoPago" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-green text-white">
+                        <h5 class="modal-title"><i class="bi bi-wallet2 me-2"></i>Elegir método de pago</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Total a cobrar</span>
+                            <strong class="fs-4 text-green" id="totalModalPago">S/. 0.00</strong>
+                        </div>
+                        <div class="d-grid gap-2" id="listaMetodosPago">
+                            <button type="button" class="btn btn-outline-success text-start py-3" data-metodo-pago="MANUAL">
+                                <i class="bi bi-cash-coin me-2"></i>
+                                <strong>Efectivo / manual</strong>
+                                <span class="d-block small text-muted">El cajero valida el dinero, Yape manual o transferencia.</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary text-start py-3" data-metodo-pago="NIUBIZ" disabled>
+                                <i class="bi bi-qr-code-scan me-2"></i>
+                                <strong>Yape / QR Niubiz</strong>
+                                <span class="d-block small text-muted">Usa la pasarela configurada para la empresa.</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-info text-start py-3" data-metodo-pago="MERCADOPAGO" disabled>
+                                <i class="bi bi-phone me-2"></i>
+                                <strong>QR Mercado Pago</strong>
+                                <span class="d-block small text-muted">Disponible solo si la empresa usa Mercado Pago.</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-light border small text-muted mt-3 mb-0" id="avisoMetodosPago">
+                            Cargando métodos disponibles...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal QR Niubiz -->
+        <div class="modal fade" id="modalQR" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title"><i class="bi bi-qr-code-scan"></i> Escanea para pagar</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p class="text-muted mb-2">Acerque su aplicación de pago</p>
+                        <img id="imagenQrMercadoPago" src="" alt="Código QR" class="img-fluid border rounded p-2 mb-3 d-none" style="min-width: 200px; min-height: 200px;">
+                        <div class="d-flex justify-content-center">
+                            <pre id="contenedorQrAscii" class="d-none border rounded p-3 mb-3 text-dark bg-white" style="font-family: monospace; font-size: 8px; line-height: 8px; text-align: center; overflow: hidden; margin: 0; padding: 10px;"></pre>
+                        </div>
+                        <h4 id="montoQr" class="text-primary fw-bold">S/. 0.00</h4>
+                        <div class="spinner-border text-primary spinner-border-sm mt-2" role="status">
+                            <span class="visually-hidden">Esperando pago...</span>
+                        </div>
+                        <p class="text-muted small mt-1">Esperando confirmación...</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-success btn-sm" id="btnConfirmarPagoQr">
+                            <i class="bi bi-check2-circle me-1"></i>Confirmar pago recibido
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" id="btnCerrarQr">Cerrar y hacer nueva venta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Confirmar Efectivo -->
+        <div class="modal fade" id="modalConfirmarEfectivo" tabindex="-1" aria-labelledby="modalConfirmarEfectivoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-warning text-dark border-0">
+                        <h5 class="modal-title fw-bold" id="modalConfirmarEfectivoLabel">
+                            <i class="bi bi-cash-coin me-2"></i>Confirmar Efectivo
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <p class="text-muted mb-2 fw-semibold">Total a recibir del cliente:</p>
+                        <h1 class="display-5 fw-bold text-success mb-3">S/. <span id="montoConfirmacionEfectivo">0.00</span></h1>
+                        <p class="small text-muted mb-0">Verifica que el dinero esté completo antes de registrar la venta en el sistema.</p>
+                    </div>
+                    <div class="modal-footer bg-light justify-content-between border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success fw-bold px-4" id="btnConfirmarEfectivoFinal">
+                            <i class="bi bi-check-circle-fill me-1"></i> Sí, Cobrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Baucher Manual -->
+        <div class="modal fade" id="modalBaucherManual" tabindex="-1" aria-labelledby="modalBaucherManualLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-success text-white border-0">
+                        <h5 class="modal-title fw-bold" id="modalBaucherManualLabel">
+                            <i class="bi bi-check-circle-fill me-2"></i>Pago Exitoso
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="bi bi-receipt" style="font-size: 4rem; color: #198754;"></i>
+                        </div>
+                        <h2 class="fw-bold text-dark mb-1">S/. <span id="montoBaucher">0.00</span></h2>
+                        <p class="text-muted fw-semibold mb-3">Cobro en Efectivo / Manual</p>
+                        <div class="bg-light rounded p-2 mb-3 border" style="border-style: dashed !important;">
+                            <small class="text-muted d-block">La venta ha sido registrada correctamente en el sistema y el stock actualizado.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0 justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg me-1"></i> Nueva Venta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
+<!-- Fin de la plantilla ventas-modales.html. -->

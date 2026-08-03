@@ -1,0 +1,217 @@
+<!--
+============================================================
+     PROYECTO: Sistema POS BarCodeSys - Módulo de Inteligencia Artificial
+     DESCRIPCIÓN: Fragmento Thymeleaf reutilizable encargado de renderizar la sección de
+                  promociones en la interfaz.
+
+     @author Jesús Alexander Perez Huacaychuco
+     @version 1.0.0
+     @date 03/08/2026
+============================================================
+-->
+
+<!-- ============================================================
+     INICIO DE LA PLANTILLA
+     ============================================================
+     Inicio de la plantilla promociones.html.
+-->
+<div th:fragment="promociones">
+    <div class="container-fluid py-4">
+        
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <h2 class="text-green fw-bold mb-0 mt-2">
+                <i class="bi bi-tags-fill text-success me-2"></i>Gestión de Promociones e IA Cross-Selling
+            </h2>
+            
+            <div class="text-end">
+                <button id="btnGenerarPromosIA" class="btn btn-warning fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalConfigurarIA">
+                    <i class="bi bi-cpu-fill me-1"></i> Generar Ofertas con IA
+                </button>
+                <div class="mt-2 text-muted" style="max-width: 320px; text-align: right; margin-left: auto;">
+                    <small style="font-size: 0.80em; line-height: 1.2; display: inline-block;">
+                        <i class="bi bi-info-circle"></i> <b>Nota:</b> Generar nuevas ofertas reemplazará las sugerencias de IA anteriores. Tus promociones manuales están protegidas.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-xl-8">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h6 class="fw-bold text-secondary mb-0">
+                            <i class="bi bi-grid-3x3-gap-fill me-2"></i>Promociones de Venta Cruzada Activas
+                        </h6>
+                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalNuevaPromo">
+                            <i class="bi bi-plus-lg"></i> Nueva Promo Manual
+                        </button>
+                    </div>
+                    
+                    <div class="card-body p-0">
+                        
+                        <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+                            <div class="d-flex align-items-center">
+                                <label for="filtroOrigenPromos" class="me-2 fw-bold text-secondary mb-0">Filtrar por:</label>
+                                <select id="filtroOrigenPromos" class="form-select form-select-sm shadow-sm" style="width: auto;">
+                                    <option value="TODOS">Todas las promociones</option>
+                                    <option value="IA">Solo IA</option>
+                                    <option value="MANUAL">Solo Manuales</option>
+                                </select>
+                            </div>
+                            <button id="btnExportarExcel" class="btn btn-sm btn-outline-success fw-bold shadow-sm">
+                                <i class="bi bi-file-earmark-excel"></i> Descargar Excel
+                            </button>
+                        </div>
+
+                        <div id="loaderPromociones" class="text-center py-5 d-none">
+                            <div class="spinner-border text-success" role="status"></div>
+                            <p class="text-muted small mt-2">Cargando promociones...</p>
+                        </div>
+
+                        <div id="emptyStatePromociones" class="text-center py-5 d-none">
+                            <i class="bi bi-basket3 text-muted display-3 d-block mb-3"></i>
+                            <h5 class="fw-bold text-secondary">No hay promociones activas (o para este filtro)</h5>
+                            <p class="text-muted small px-4">
+                                El cajero no verá sugerencias en caja. Haz clic en <strong>"Generar Ofertas con IA"</strong> <br>
+                                para que Gemini analice tu historial de ventas y cree sugerencias automáticas.
+                            </p>
+                        </div>
+
+                        <div class="table-responsive" id="tablaPromocionesContenedor">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Producto Base</th>
+                                        <th>Sugerir Adquirir</th>
+                                        <th class="text-center">Precio Sugerido / Descuento</th>
+                                        <th class="text-center">Origen</th>
+                                        <th class="text-center pe-4">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyPromociones">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-xl-4">
+                <div class="card shadow-sm border-0 h-100 bg-light-green-gradient">
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-shape bg-success text-white rounded-circle p-2 me-3">
+                                    <i class="bi bi-lightning-charge-fill"></i>
+                                </div>
+                                <h5 class="fw-bold text-success mb-0">¿Cómo funciona?</h5>
+                            </div>
+                            <p class="text-muted small">
+                                Nuestro motor de IA ejecuta un análisis de **Market Basket Analysis** (Reglas de Asociación). 
+                            </p>
+                            <p class="text-muted small">
+                                Al presionar el botón de generación, la IA lee la lista de productos y tus últimas transacciones para identificar qué compran juntos tus clientes de forma recurrente.
+                            </p>
+                            <div class="p-3 bg-white rounded border-start border-4 border-warning shadow-xs mb-3">
+                                <span class="fw-bold text-dark d-block small">💡 Regla del Negocio:</span>
+                                <span class="text-muted small">Si no tienes promociones manuales cargadas, la caja utilizará automáticamente las relaciones históricas generadas por el modelo de IA.</span>
+                            </div>
+                        </div>
+                        <div class="border-top pt-3 mt-3">
+                            <span class="text-muted d-block small mb-1">Último análisis ejecutado:</span>
+                            <span class="fw-bold text-secondary small" id="fechaUltimaConexionIA">Cargando fecha...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNuevaPromo" tabindex="-1" aria-labelledby="modalNuevaPromoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold" id="modalNuevaPromoLabel">
+                        <i class="bi bi-tag-fill me-2"></i>Nueva Promoción Manual
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formNuevaPromo">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Producto Base (Escanea Código)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-2"><i class="bi bi-upc-scan"></i></span>
+                                <input type="text" id="codigoProductoBase" class="form-control border-2" placeholder="Escanea el código y presiona Enter..." autocomplete="off">
+                            </div>
+                            <input type="hidden" id="productoBaseId">
+                            <div class="mt-2 text-center p-2 rounded" style="background-color: #f8f9fa; border: 1px dashed #dee2e6;">
+                                <h6 class="mb-0 text-dark">Producto Base: <span id="nombreProductoBase" class="text-muted fw-normal">Ninguno</span></h6>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Producto a Ofrecer (Escanea Código)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-2"><i class="bi bi-upc-scan"></i></span>
+                                <input type="text" id="codigoProductoAsociado" class="form-control border-2" placeholder="Escanea el código y presiona Enter..." autocomplete="off">
+                            </div>
+                            <input type="hidden" id="productoAsociadoId">
+                            <div class="mt-2 text-center p-2 rounded" style="background-color: #f8f9fa; border: 1px dashed #dee2e6;">
+                                <h6 class="mb-0 text-dark">Se ofrecerá: <span id="nombreProductoAsociado" class="text-muted fw-normal">Ninguno</span></h6>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputPrecioPromo" class="form-label fw-semibold text-secondary">Precio Especial / Adicional (S/.)</label>
+                            <input type="number" step="0.01" min="0.00" class="form-control" id="inputPrecioPromo" placeholder="Ej: 1.50" required>
+                            <div class="form-text">Monto extra que pagará el cliente si acepta la oferta.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary text-dark fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" onclick="guardarPromoManual()">Guardar Promoción</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfigurarIA" tabindex="-1" aria-labelledby="modalConfigurarIALabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold" id="modalConfigurarIALabel">
+                        <i class="bi bi-cpu-fill me-2"></i>Configurar Inteligencia Artificial
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label for="inputCantidadPromos" class="form-label fw-semibold text-secondary">¿Cuántas promociones deseas generar?</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-2"><i class="bi bi-hash"></i></span>
+                            <input type="number" id="inputCantidadPromos" class="form-control border-2 fw-bold text-center text-dark" min="1" max="500" value="3" style="font-size: 1.1em;">
+                        </div>
+                        <div class="form-text">Ingresa un número objetivo de sugerencias cruzadas (Máximo permitido: 500).</div>
+                    </div>
+                    <div class="alert alert-info border-0 shadow-sm d-flex align-items-start mb-0" style="background-color: #f0f7ff; border-left: 4px solid #0dcaf0 !important;">
+                        <i class="bi bi-info-circle-fill text-info fs-5 me-3 mt-1"></i>
+                        <div>
+                            <span class="fw-bold text-dark d-block mb-1">Aviso de Escalabilidad:</span>
+                            <p class="text-muted small mb-0" style="line-height: 1.4; font-size: 0.88em;">
+                                Si solicitas más promociones de las relaciones lógicas reales que existen en tus productos y ventas actuales, 
+                                la IA se detendrá de manera segura y **generará únicamente las que alcancen** para prevenir ofertas repetidas o datos falsos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" id="btnCancelarIA" class="btn btn-secondary text-dark fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnEjecutarIA" class="btn btn-warning fw-bold text-dark px-4" onclick="sugerirPromocionesConIA()">
+                        <i class="bi bi-lightning-charge-fill me-1"></i> Iniciar Análisis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin de la plantilla promociones.html. -->

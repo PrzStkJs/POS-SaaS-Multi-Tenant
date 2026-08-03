@@ -1,0 +1,136 @@
+<!--
+============================================================
+     PROYECTO: Sistema POS BarCodeSys - Módulo de Ventas
+     DESCRIPCIÓN: Fragmento Thymeleaf reutilizable encargado de renderizar la sección de ventas
+                  en la interfaz.
+
+     @author Jesús Alexander Perez Huacaychuco
+     @version 1.0.0
+     @date 03/08/2026
+============================================================
+-->
+
+<!-- ============================================================
+     INICIO DE LA PLANTILLA
+     ============================================================
+     Inicio de la plantilla ventas.html.
+-->
+<div th:fragment="ventas">
+    <div class="container-fluid py-4">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-green fw-bold mb-0">
+                <i class="bi bi-graph-up me-2"></i>Gestión de Ventas
+            </h2>
+            <button class="btn btn-outline-success shadow-sm" onclick="exportarExcel()">
+                <i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel
+            </button>
+        </div>
+        
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <form id="formFiltroVentas" class="row g-3 align-items-end">
+                    <!-- Ajustado a col-md-2 para hacer espacio -->
+                    <div class="col-md-2">
+                        <label class="form-label text-muted small fw-bold">N° Ticket</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-hash"></i></span>
+                            <input type="number" class="form-control border-start-0 ps-0" id="filtroTicket" placeholder="000000">
+                        </div>
+                    </div>
+
+                    <!-- Ajustado a col-md-2 para hacer espacio -->
+                    <div class="col-md-2">
+                        <label class="form-label text-muted small">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="filtroFechaInicio">
+                    </div>
+                    
+                    <!-- Ajustado a col-md-2 para hacer espacio -->
+                    <div class="col-md-2">
+                        <label class="form-label text-muted small">Fecha Fin</label>
+                        <input type="date" class="form-control" id="filtroFechaFin">
+                    </div>
+
+                    <!-- Filtro de estado para segmentar ventas por situación. -->
+                    <div class="col-md-3">
+                        <label for="filtroEstado" class="form-label text-muted small">Estado</label>
+                        <select id="filtroEstado" class="form-select">
+                            <option value="">Todos los estados</option>
+                            <option value="COMPLETADA">Completada</option>
+                            <option value="PENDIENTE_PAGO">Pendiente</option>
+                            <option value="ANULADA">Anulada</option>
+                        </select>
+                    </div>
+                    
+                    <!-- El botón se mantiene en col-md-3 -->
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary w-100 shadow-sm" onclick="cargarHistorialVentas()">
+                            <i class="bi bi-search me-1"></i> Buscar Ventas
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tablaVentasAdmin">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-4 py-3">N° Ticket</th>
+                                <th class="py-3">Fecha y Hora</th>
+                                <th class="py-3">Cajero</th>
+                                <th class="py-3 text-end">Total</th>
+                                <th class="py-3 text-center">Estado</th>
+                                <th class="px-4 py-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTablaVentas">
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                    Cargando transacciones...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    <!-- Modal de Detalle de Venta -->
+    <div class="modal fade" id="modalDetalleVenta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="bi bi-receipt me-2"></i>Detalle del Ticket <span id="modalTicketId" class="text-primary"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Cant.</th>
+                                    <th>Producto / Descripción</th>
+                                    <th class="text-end">P. Unitario</th>
+                                    <th class="text-end pe-4">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyDetalleVenta">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin de la plantilla ventas.html. -->

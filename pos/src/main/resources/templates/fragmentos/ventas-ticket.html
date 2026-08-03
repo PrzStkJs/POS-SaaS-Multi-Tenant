@@ -1,0 +1,46 @@
+<!--
+============================================================
+     PROYECTO: Sistema POS BarCodeSys - Módulo de Ventas
+     DESCRIPCIÓN: Fragmento Thymeleaf reutilizable encargado de renderizar la sección de ventas
+                  ticket en la interfaz.
+
+     @author Jesús Alexander Perez Huacaychuco
+     @version 1.0.0
+     @date 03/08/2026
+============================================================
+-->
+
+<!-- ============================================================
+     INICIO DE LA PLANTILLA
+     ============================================================
+     Inicio de la plantilla ventas-ticket.html.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="ticketImpresion" id="zona-impresion-ticket">
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h3 style="margin: 0; font-size: 16px;">MI EMPRESA</h3>
+            <p style="margin: 0; font-size: 12px;">Ticket de Venta</p>
+            <p style="margin: 5px 0;">--------------------------------</p>
+        </div>
+
+        <table style="width: 100%; font-size: 12px;" id="tabla-ticket-items">
+            <!-- Los items se cargan desde el modulo de interfaz de ventas. -->
+        </table>
+
+        <p style="text-align: center; margin: 5px 0;">--------------------------------</p>
+
+        <div style="text-align: right; font-size: 12px;">
+            <div style="margin-bottom: 3px;">Subtotal: <span id="t-subtotal"></span></div>
+            <div style="margin-bottom: 3px;">IGV (18%): <span id="t-igv"></span></div>
+            <h3 style="margin: 5px 0; font-size: 14px;">Total: <span id="t-total"></span></h3>
+        </div>
+
+        <p style="text-align: center; font-size: 12px; margin-top: 15px;">
+            ¡Gracias por su compra!
+        </p>
+    </div>
+</body>
+</html>
+<!-- Fin de la plantilla ventas-ticket.html. -->

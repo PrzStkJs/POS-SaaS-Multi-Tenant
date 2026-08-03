@@ -1,0 +1,365 @@
+/**
+ * PROYECTO: Sistema POS BarCodeSys - Módulo de Inventario y Productos
+ * DESCRIPCIÓN: Hoja de estilos encargada de definir la presentación visual, espaciado y
+ *              componentes de stock.
+ *
+ * @author Jesús Alexander Perez Huacaychuco
+ * @version 1.0.0
+ * @date 03/08/2026
+ */
+
+/* ============================================================
+ *                  ESTILOS DEL MÓDULO
+ * ============================================================ */
+/* Inicio de estilos de stock.css. */
+/* ============================================================ */
+/* stock.css - Estilos para la vista de Stock                   */
+/* ============================================================ */
+
+/* ========== VARIABLES GLOBALES ========== */
+:root {
+    --sidebar-width: 200px;
+    --verde: #2d7a32;
+    --verde-hover: #236128;
+    --bg-light: #eaf5ea;
+    --blanco: #ffffff;
+    --gris-claro: #f8f9fa;
+    --borde-suave: #dee2e6;
+    --texto-oscuro: #1e293b;
+    --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== RESET Y BASE ========== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--texto-oscuro);
+}
+
+/* ============================================================ */
+/* SIDEBAR (escritorio)                                          */
+/* ============================================================ */
+.sidebar-desktop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--blanco);
+    border-right: 1px solid var(--borde-suave);
+    z-index: 1040;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.sidebar-desktop .nav {
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    color: #333;
+    border-radius: 8px;
+    margin: 2px 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: var(--verde);
+    color: white;
+    transform: translateX(3px);
+}
+
+.sidebar-link.text-danger:hover {
+    background-color: #ffe8e8;
+    color: #d32f2f;
+    transform: translateX(3px);
+}
+
+.sidebar-link i {
+    width: 20px;
+    text-align: center;
+}
+
+/* ============================================================ */
+/* OFFCANVAS (móvil)                                            */
+/* ============================================================ */
+.offcanvas .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    color: #333;
+    border-radius: 8px;
+    margin: 2px 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.offcanvas .sidebar-link:hover,
+.offcanvas .sidebar-link.active {
+    background-color: var(--verde);
+    color: white;
+}
+
+.offcanvas .sidebar-link.text-danger:hover {
+    background-color: #ffe8e8;
+    color: #d32f2f;
+}
+
+/* ============================================================ */
+/* CONTENIDO PRINCIPAL                                          */
+/* ============================================================ */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 20px 25px 40px;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+/* ============================================================ */
+/* TARJETAS (Cards)                                              */
+/* ============================================================ */
+.card {
+    border: none;
+    border-radius: 12px;
+    background: var(--blanco);
+    box-shadow: var(--sombra-card);
+    overflow: hidden;
+}
+
+.card-header {
+    background: var(--blanco);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.25rem;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.card-body {
+    padding: 0;
+}
+
+/* ============================================================ */
+/* TABLAS                                                       */
+/* ============================================================ */
+.table {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.table th {
+    font-weight: 600;
+    color: #555;
+    border-bottom-width: 1px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 12px 12px;
+    background-color: var(--gris-claro);
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 12px 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(45, 122, 50, 0.04);
+}
+
+.table .badge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* ============================================================ */
+/* BOTONES PERSONALIZADOS                                       */
+/* ============================================================ */
+.btn-green {
+    background-color: var(--verde);
+    border: none;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+
+.btn-green:hover {
+    background-color: var(--verde-hover);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(45, 122, 50, 0.3);
+}
+
+.btn-green:disabled {
+    background-color: #a3c9a5;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-outline-green {
+    border: 1px solid var(--verde);
+    color: var(--verde);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    background: transparent;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--verde);
+    color: white;
+    border-color: var(--verde);
+}
+
+.btn-outline-green i {
+    font-size: 0.8rem;
+}
+
+/* ============================================================ */
+/* BADGES DE COLOR                                              */
+/* ============================================================ */
+.bg-green {
+    background-color: var(--verde) !important;
+}
+
+.text-green {
+    color: var(--verde) !important;
+}
+
+/* ============================================================ */
+/* FILTROS (buscador y select)                                   */
+/* ============================================================ */
+.card-header .input-group .form-control {
+    border-color: var(--borde-suave);
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    transition: all 0.2s ease;
+}
+
+.card-header .input-group .form-control:focus {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 0.2rem rgba(45, 122, 50, 0.15);
+}
+
+.card-header .input-group-text {
+    border-color: var(--borde-suave);
+    background-color: var(--blanco);
+}
+
+.form-select:focus {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 0.2rem rgba(45, 122, 50, 0.15);
+}
+
+/* ============================================================ */
+/* CONTADOR DE PRODUCTOS                                        */
+/* ============================================================ */
+.badge.bg-light {
+    background-color: var(--gris-claro) !important;
+    color: var(--texto-oscuro) !important;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+/* ============================================================ */
+/* MODAL                                                        */
+/* ============================================================ */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-footer {
+    border-top: 1px solid #f1f5f9;
+}
+
+/* ============================================================ */
+/* RESPONSIVE                                                    */
+/* ============================================================ */
+@media (max-width: 991.98px) {
+    .sidebar-desktop {
+        display: none !important;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .table th,
+    .table td {
+        font-size: 0.8rem;
+        padding: 8px 6px;
+    }
+    .btn-green,
+    .btn-outline-green {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+    }
+    .btn-outline-green i {
+        margin-right: 2px;
+    }
+    .card-header {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 8px;
+    }
+    .card-header .d-flex {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .card-header .input-group {
+        max-width: 100% !important;
+    }
+    .card-header select {
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 10px;
+    }
+    .table-responsive {
+        font-size: 0.75rem;
+    }
+    .table td,
+    .table th {
+        padding: 6px 4px;
+    }
+    .badge {
+        font-size: 0.65rem;
+        padding: 3px 7px;
+    }
+}
+/* Fin de estilos de stock.css. */

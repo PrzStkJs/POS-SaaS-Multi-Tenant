@@ -1,0 +1,214 @@
+/**
+ * PROYECTO: Sistema POS BarCodeSys - Módulo de Ventas
+ * DESCRIPCIÓN: Hoja de estilos encargada de definir la presentación visual, espaciado y
+ *              componentes de ventas.
+ *
+ * @author Jesús Alexander Perez Huacaychuco
+ * @version 1.0.0
+ * @date 03/08/2026
+ */
+
+/* ============================================================
+ *                  ESTILOS DEL MÓDULO
+ * ============================================================ */
+/* Inicio de estilos de ventas.css. */
+:root {
+    --verde: #2d7a32;
+    --verde-hover: #236128;
+    --bg-light: #eaf5ea;
+    --blanco: #ffffff;
+    --rojo: #d32f2f;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===================== BARRA SUPERIOR ===================== */
+.navbar .btn-outline-green {
+    border: 1px solid var(--verde);
+    color: var(--verde);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.navbar .btn-outline-green:hover {
+    background-color: var(--verde);
+    color: white;
+}
+
+/* ===================== TARJETAS Y TABLAS ===================== */
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.table th {
+    font-weight: 600;
+    color: #555;
+    border-bottom-width: 1px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.sticky-top {
+    top: 0;
+    z-index: 1;
+    background-color: var(--blanco);
+}
+
+#contadorItems {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+/* Resalta de forma breve el producto recien agregado al carrito. */
+@keyframes rowHighlight {
+    from { background-color: #d4edda; }
+    to { background-color: transparent; }
+}
+
+.fila-nueva {
+    animation: rowHighlight 0.6s ease;
+}
+
+/* ===================== PANEL RESUMEN ===================== */
+#subtotal, #igv, #total {
+    transition: all 0.2s ease;
+}
+
+#total {
+    transition: transform 0.2s ease;
+}
+
+#total.actualizado {
+    transform: scale(1.05);
+    color: var(--verde);
+}
+
+/* ===================== BOTONES ===================== */
+.btn-green {
+    background-color: var(--verde);
+    border: none;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-green:hover {
+    background-color: var(--verde-hover);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(45, 122, 50, 0.3);
+}
+
+.btn-green:disabled {
+    background-color: #a3c9a5;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-outline-green {
+    border: 1px solid var(--verde);
+    color: var(--verde);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--verde);
+    color: white;
+}
+
+.btn-outline-danger {
+    border: 1px solid var(--rojo);
+    color: var(--rojo);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+    background-color: var(--rojo);
+    color: white;
+}
+
+/* Ajusta el resumen lateral para listas cortas y escaneos consecutivos. */
+#listaResumen .table {
+  font-size: 0.9rem;
+}
+
+#listaResumen .table td {
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#listaResumen .table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===================== FORMULARIOS ===================== */
+.form-control:focus {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 0.2rem rgba(45, 122, 50, 0.2);
+}
+
+/* ===================== MODAL ===================== */
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+.modal-body .badge {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+}
+
+/* ===================== UTILIDADES ===================== */
+.text-green { color: var(--verde) !important; }
+.bg-green { background-color: var(--verde) !important; }
+.bg-light-green { background-color: var(--bg-light) !important; }
+
+/* ===================== TICKET TERMICO (IMPRESION) ===================== */
+
+#zona-impresion-ticket {
+    display: none;
+}
+
+@media print {
+    body > *:not(#zona-impresion-ticket) {
+        display: none !important;
+    }
+    
+    #zona-impresion-ticket {
+        display: block !important;
+        width: 80mm;
+        margin: 0;
+        padding: 0;
+        font-family: 'Courier New', Courier, monospace;
+        color: #000;
+    }
+    
+    @page {
+        margin: 0;
+    }
+}
+/* Fin de estilos de ventas.css. */

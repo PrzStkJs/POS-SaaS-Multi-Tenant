@@ -1,0 +1,64 @@
+/**
+ * PROYECTO: Sistema POS BarCodeSys - Módulo de Seguridad y Usuarios
+ * DESCRIPCIÓN: Hoja de estilos encargada de definir la presentación visual, espaciado y
+ *              componentes de login.
+ *
+ * @author Jesús Alexander Perez Huacaychuco
+ * @version 1.0.0
+ * @date 03/08/2026
+ */
+
+/* ============================================================
+ *                  ESTILOS DEL MÓDULO
+ * ============================================================ */
+/* Inicio de estilos de login.css. */
+/* ===========================================
+   SECCIÓN 1: Diseño general
+   =========================================== */
+body {
+    background-color: #eaf5ea;
+}
+
+/* ===========================================
+   SECCIÓN 2: Tarjeta de login
+   =========================================== */
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    border: none;
+    background-color: #ffffff;
+}
+
+/* ===========================================
+   SECCIÓN 3: Colores reutilizables
+   =========================================== */
+.text-green {
+    color: #2d7a32;
+}
+
+/* ===========================================
+   SECCIÓN 4: Botón principal
+   =========================================== */
+.btn-green {
+    background-color: #2d7a32;
+    border: none;
+    color: white;
+    padding: 10px 0;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-green:hover {
+    background-color: #236128;
+    color: white;
+}
+
+/* ===========================================
+   SECCIÓN 5: Estados de foco en inputs
+   =========================================== */
+.form-control:focus {
+    border-color: #2d7a32;
+    box-shadow: 0 0 0 0.2rem rgba(45, 122, 50, 0.25);
+}
+/* Fin de estilos de login.css. */
