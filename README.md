@@ -75,16 +75,10 @@ El sistema fue diseñado bajo estrictos estándares de ciberseguridad y arquitec
 
 ---
 
-## 🚀 Instalación y Configuración Local
+## ✉️ Contáctame
 
-### Prerrequisitos
-* Java JDK 17 o superior
-* Maven 3.8+
-* Instancia de PostgreSQL (o cuenta en Supabase)
+¿Te interesa ver una **demo en vivo** del sistema o discutir oportunidades de desarrollo? ¡Hablemos!
 
-### Pasos
-
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/tu-usuario/saas-pos-gemini.git](https://github.com/tu-usuario/saas-pos-gemini.git)
-   cd saas-pos-gemini
+* 📧 **Correo Electrónico:** [jesu123456789pere@gmail.com](mailto:jesu123456789pere@gmail.com)
+* 💼 **LinkedIn:** [linkedin.com/in/jesusperez](#)
+* 🐙 **GitHub:** [github.com/jesusperez](#)
