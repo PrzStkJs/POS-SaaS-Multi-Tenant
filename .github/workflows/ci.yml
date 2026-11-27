@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pos
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Las pruebas de contexto necesitan una base PostgreSQL real;
+      # por ahora la CI valida que el proyecto compile y empaquete.
+      - name: Build
+        run: |
+          chmod +x mvnw
+          ./mvnw -B -DskipTests package

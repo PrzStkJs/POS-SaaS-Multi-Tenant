@@ -1,82 +1,174 @@
 <div align="center">
-  <img src="https://cdn-icons-png.flaticon.com/512/5809/5809896.png" alt="SaaS POS Logo" width="140" height="140" />
-  <h1>🛒 Multi-Tenant SaaS POS System + AI</h1>
-  <p><b>Sistema de Punto de Venta Inteligente, Multi-Empresa y Resiliente Offline</b></p>
 
-  [![Java](https://img.shields.io/badge/Java-17-orange.svg?style=for-the-badge&logo=openjdk)](https://www.oracle.com/java/)
-  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-green.svg?style=for-the-badge&logo=springboot)](https://spring.io/projects/spring-boot)
-  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue.svg?style=for-the-badge&logo=postgresql)](https://supabase.com/)
-  [![Gemini AI](https://img.shields.io/badge/Google_Gemini-AI_Engine-4285F4.svg?style=for-the-badge&logo=google)](https://ai.google.dev/)
-  [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=for-the-badge)](LICENSE)
+# POS SaaS Multi-Tenant + IA
+
+**Plataforma de punto de venta en la nube para pequeños negocios: varias empresas en una sola instancia, pagos QR, analítica con IA y modo offline parcial.**
+
+[![Build](https://github.com/PrzStkJs/POS-SaaS-Multi-Tenant/actions/workflows/ci.yml/badge.svg)](https://github.com/PrzStkJs/POS-SaaS-Multi-Tenant/actions/workflows/ci.yml)
+![Java](https://img.shields.io/badge/Java-17-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-6DB33F?logo=springboot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-4169E1?logo=postgresql)
+![Gemini](https://img.shields.io/badge/Google%20Gemini-IA-4285F4?logo=google)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+[Demo en video](https://vimeo.com/1215131349) · [Portafolio](https://przstkjs.github.io/Portafolio-Perez/)
+
 </div>
 
 ---
 
-## 📌 Descripción General
+## El problema
 
-Este proyecto es una plataforma **SaaS Multi-Tenant** de Punto de Venta (POS) e inventarios diseñada para resolver los problemas operativos reales de pequeñas y medianas empresas (bodegas, minimarkets, farmacias). 
+Las bodegas, minimarkets y farmacias suelen llevar caja, inventario, cobros y reportes en herramientas separadas. El resultado: stock descuadrado, poca visibilidad de lo que se vende y ventas perdidas cuando se cae internet.
 
-Integra en una sola aplicación el control de caja en tiempo real, gestión estricta de inventarios, cobros con pasarelas digitales mediante QR, un motor de **Inteligencia Artificial con Google Gemini** para asistencia ejecutiva/OCR y resiliencia mediante un **modo offline parcial**.
+## La solución
 
----
+Un POS SaaS donde cada empresa trabaja aislada dentro de la misma aplicación, con:
 
-## ✨ Características Principales
-
-### 🏢 Arquitectura Multi-Empresa & Control de Acceso (RBAC)
-* **Aislamiento Multi-Tenant:** Garantiza que los datos de cada cliente pertenezcan únicamente a su organización mediante filtrado estricto por `empresaId`.
-* **Roles Granulares:**
-  * `SUPER_ADMIN`: Gestión global de empresas registradas y métricas del SaaS.
-  * `ADMIN`: Control total de sucursales, productos, usuarios, categorías y finanzas.
-  * `CAJERO`: Interfaz optimizada para agilidad en caja y registro de ventas.
-
-### 💳 Caja, Ventas & Pasarelas de Pago
-* **Punto de Venta Dinámico:** Emisión rápida de comprobantes, control de stock en tiempo real y devoluciones con ajuste automático de inventario.
-* **Integración de Pagos QR:** Módulos listos para cobros mediante **Mercado Pago** y **Niubiz**.
-* **Confirmación Automatizada:** Procesamiento asíncrono de pagos a través de **Webhooks de Mercado Pago**.
-* **Reportes & Exportaciones:** Dashboard interactivo con KPIs, gráficos de ventas, productos críticos e informes descargables en formato **Excel / CSV**.
-
-### 🤖 Inteligencia Artificial Integrada (Google Gemini)
-* **Escaneo OCR de Facturas:** Carga automática de mercancía y facturas mediante visión por computadora.
-* **Analítica & Reportes Ejecutivos:** Resúmenes inteligentes de rendimiento financiero y predicción de agotamiento de inventario.
-* **Cross-Selling Recomendado:** Sugerencias automáticas de promociones y productos complementarios para el cajero.
-
-### 📶 Resiliencia & Modo Offline Parcial
-* **Sincronización Transaccional:** Si la conexión a internet falla, el sistema almacena localmente las ventas en efectivo utilizando `localStorage`.
-* **Auto-Sync:** Al reestablecer el enlace online, el sistema ejecuta background-jobs para sincronizar las transacciones pendientes sin perder integridad de datos.
+- **Ventas y caja** con control de stock en tiempo real y anulación de ventas.
+- **Cobros QR** con Mercado Pago y Niubiz, y confirmación automática por **webhooks**.
+- **IA con Google Gemini**: lectura OCR de facturas de proveedores, reportes ejecutivos, chatbot corporativo y sugerencias de *cross-selling*.
+- **Proyección de demanda** e inventario crítico en el dashboard.
+- **Modo offline parcial**: las ventas en efectivo se guardan en el navegador y se sincronizan al volver la conexión.
 
 ---
 
-## 🛡️ Seguridad & Buenas Prácticas
+## Arquitectura
 
-El sistema fue diseñado bajo estrictos estándares de ciberseguridad y arquitectura limpia:
+```mermaid
+flowchart LR
+    subgraph Cliente["Navegador"]
+        UI["Thymeleaf + JS modular<br/>(cola offline en localStorage)"]
+    end
 
-| Medida de Seguridad | Descripción |
+    subgraph App["Spring Boot 3.3 · Java 17"]
+        SEC["Spring Security<br/>RBAC + CSRF + BCrypt"]
+        CTRL["Controllers REST / Web"]
+        SVC["Servicios de dominio<br/>(ventas, inventario, dashboard)"]
+        PAY["PasarelaPagoFactory<br/>(Strategy)"]
+        AI["GeminiClient<br/>(OCR · analítica · chatbot)"]
+        REPO["Spring Data JPA + QueryDSL"]
+    end
+
+    DB[("PostgreSQL<br/>Supabase")]
+    MP["Mercado Pago"]
+    NB["Niubiz"]
+    GEM["Google Gemini API"]
+
+    UI -->|HTTPS| SEC --> CTRL --> SVC
+    SVC --> PAY
+    SVC --> AI --> GEM
+    SVC --> REPO --> DB
+    PAY --> MP
+    PAY --> NB
+    MP -->|webhook| CTRL
+```
+
+### Decisiones de diseño
+
+| Decisión | Por qué |
 | :--- | :--- |
-| **Protección Multi-Tenant** | Queries interceptadas para garantizar que solo se consulten datos del `empresaId` autenticado. |
-| **Gestión de Secretos** | Credenciales aisladas del código mediante variables de entorno (`application.properties`). |
-| **Seguridad de Capas** | Autenticación y cifrado de contraseñas con **BCrypt** y **Spring Security**. |
-| **Mitigación de Vulnerabilidades** | Protección activada contra ataques **XSS** (sanitización de renderizado JS) y **CSRF**. |
+| **Multi-tenant por discriminador (`empresaId`)** | Una sola base y un solo despliegue para todos los clientes. Cada consulta toma la empresa del usuario autenticado (`SecurityUtils.getCurrentEmpresaId()`), nunca de un parámetro enviado por el cliente. |
+| **Pasarelas de pago con patrón Strategy + Factory** | `PasarelaPagoService` define el contrato y `PasarelaPagoFactory` elige la implementación (Mercado Pago, Niubiz o manual). Agregar una pasarela nueva es crear una clase, sin tocar el flujo de venta. |
+| **Confirmación de pago por webhook** | El estado de la venta se actualiza cuando la pasarela confirma, no cuando el cliente dice que pagó. |
+| **Una API key de Gemini por caso de uso** | OCR, analítica y chatbot usan claves y modelos separados: se controlan costos y límites por función. |
+| **Secretos solo en variables de entorno** | Ninguna credencial vive en el repositorio. Ver [`.env.example`](pos/.env.example). |
+
+### Roles
+
+| Rol | Acceso |
+| :--- | :--- |
+| `SUPER_ADMIN` | Alta y configuración de empresas del SaaS. |
+| `ADMIN` | Dashboard, productos, stock, usuarios, promociones y analítica de su empresa. |
+| `CAJERO` | Pantalla de ventas y cobros. |
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack
 
-### Backend
-* **Lenguaje & Framework:** Java 17 | Spring Boot 3.3
-* **Seguridad:** Spring Security, BCrypt, Webhooks HMAC Verification
-* **Persistencia:** Spring Data JPA, Hibernate, QueryDSL
-* **Base de Datos:** PostgreSQL en Supabase
-* **Documentación & Tools:** OpenAPI / Swagger (springdoc), Maven, ZXing (QR Generator)
-
-### Frontend
-* **Core:** Thymeleaf, JavaScript Modular (ES6+), HTML5, CSS3
-* **UI Framework:** Bootstrap 5, Bootstrap Icons, SweetAlert2
-* **Visualización & Data:** Chart.js, Flatpickr, ExcelJS, XLSX, FileSaver
+| Capa | Tecnologías |
+| :--- | :--- |
+| Backend | Java 17, Spring Boot 3.3, Spring Security, Spring Data JPA, Hibernate, QueryDSL, Bean Validation |
+| Base de datos | PostgreSQL (Supabase) |
+| Integraciones | Mercado Pago SDK, Niubiz, Google Gemini API, ZXing (QR), springdoc OpenAPI |
+| Frontend | Thymeleaf, JavaScript modular, Bootstrap 5, Chart.js |
+| DevOps | Maven, Docker, GitHub Actions |
 
 ---
 
-## ✉️ Contáctame
+## Ejecutar en local
 
-¿Te interesa ver una **demo en vivo** del sistema o discutir oportunidades de desarrollo? ¡Hablemos!
+**Requisitos:** Java 17 y una base PostgreSQL (local o Supabase).
 
-* 📧 **Correo Electrónico:** [jesu123456789pere@gmail.com](mailto:jesu123456789pere@gmail.com)
+```bash
+git clone https://github.com/PrzStkJs/POS-SaaS-Multi-Tenant.git
+cd POS-SaaS-Multi-Tenant/pos
+
+# 1. Configura las variables de entorno (ver .env.example)
+export DB_USERNAME=...
+export DB_PASSWORD=...
+export GEMINI_API_KEY_CHATBOT=...
+export GEMINI_API_KEY_OCR=...
+export GEMINI_API_KEY_ANALITICA=...
+export MP_ACCESS_TOKEN=...
+
+# 2. Arranca la aplicación
+./mvnw spring-boot:run
+```
+
+La aplicación queda en `http://localhost:8080`. La documentación de la API (springdoc) está en `/swagger-ui.html` tras iniciar sesión.
+
+### Con Docker
+
+```bash
+cd pos
+docker build -t pos-saas .
+docker run -p 8080:8080 --env-file .env pos-saas
+```
+
+### Variables de entorno
+
+| Variable | Uso |
+| :--- | :--- |
+| `DB_USERNAME`, `DB_PASSWORD` | Credenciales de PostgreSQL |
+| `GEMINI_API_KEY_CHATBOT` | Chatbot corporativo |
+| `GEMINI_API_KEY_OCR` | Lectura de facturas |
+| `GEMINI_API_KEY_ANALITICA` | Reportes y analítica |
+| `MP_ACCESS_TOKEN` | Access token de Mercado Pago |
+
+> La URL de la base se define en `pos/src/main/resources/application.properties`; cámbiala por la tuya.
+
+---
+
+## Estructura
+
+```
+pos/src/main/java/com/BarCodeSys/pos
+├── config/        # Jackson, QueryDSL
+├── controller/    # REST y vistas: ventas, inventario, dashboard, IA, webhooks
+├── dto/           # Contratos de entrada y salida
+├── exceptions/    # Errores de dominio
+├── models/        # Entidades JPA: Empresa, Usuario, Producto, Venta...
+├── repository/    # Spring Data JPA
+├── security/      # SecurityConfig, UsuarioPrincipal, SecurityUtils (tenant actual)
+└── service/       # Lógica de negocio, pasarelas de pago y clientes de IA
+```
+
+---
+
+## Próximos pasos
+
+- [ ] Verificación de firma en los webhooks de Mercado Pago.
+- [ ] Pruebas de integración con Testcontainers (PostgreSQL).
+- [ ] Migraciones versionadas con Flyway en lugar de `ddl-auto`.
+- [ ] Reemplazar la cola offline de `localStorage` por IndexedDB.
+
+---
+
+## Autor
+
+**Jesús Alexander Pérez** — Backend Developer (Java / Spring Boot · Python)
+
+[LinkedIn](https://www.linkedin.com/in/alexander-perez-b154683b1) · [Portafolio](https://przstkjs.github.io/Portafolio-Perez/) · [GitHub](https://github.com/PrzStkJs)
+
+Distribuido bajo licencia [MIT](LICENSE).
